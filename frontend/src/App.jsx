@@ -1,122 +1,414 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import Editor from "@monaco-editor/react";
+import { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  Chip,
+  Divider,
+  Grid,
+} from "@mui/material";
+
+import {
+  Dashboard,
+  Code,
+  Storage,
+  History,
+  Settings,
+  PlayArrow,
+  Add,
+  Terminal,
+  Shield,
+  Cloud,
+} from "@mui/icons-material";
+
+const drawerWidth = 240;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activePage, setActivePage] = useState("Dashboard");
+  const [sqlCode, setSqlCode] = useState(`-- Write your migration SQL here
+
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(100)
+);`);
+  const [isModified, setIsModified] = useState(false);
+
+  const menuItems = [
+    { name: "Dashboard", icon: <Dashboard /> },
+    { name: "Migration Editor", icon: <Code /> },
+    { name: "Environments", icon: <Storage /> },
+    { name: "Migration History", icon: <History /> },
+    { name: "Settings", icon: <Settings /> },
+  ];
+
+  const metrics = [
+    { title: "Queries Replayed", value: "0", detail: "Waiting for traffic" },
+    { title: "Error Rate", value: "0%", detail: "No errors recorded" },
+    { title: "Successful Queries", value: "0", detail: "No replay data yet" },
+  ];
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        bgcolor: "#0b1120",
+        color: "#e2e8f0",
+      }}
+    >
+      {/* Top navigation */}
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          bgcolor: "#111827",
+          borderBottom: "1px solid #263247",
+          zIndex: 1201,
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <Shield sx={{ color: "#38bdf8", fontSize: 30 }} />
+            <Typography variant="h6" fontWeight="bold">
+              ShadowBase
+            </Typography>
+            <Chip
+              label="MIGRATION SANDBOX"
+              size="small"
+              sx={{ color: "#38bdf8", bgcolor: "#172c43" }}
+            />
+          </Box>
+
+          <Chip
+            icon={<Cloud />}
+            label="Sandbox Offline"
+            sx={{ color: "#fbbf24", bgcolor: "#302718" }}
+          />
+        </Toolbar>
+      </AppBar>
+
+      {/* Sidebar */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+            bgcolor: "#111827",
+            color: "#cbd5e1",
+            borderRight: "1px solid #263247",
+            pt: 9,
+          },
+        }}
+      >
+        <Box sx={{ px: 2, py: 2 }}>
+          <Typography variant="caption" color="#64748b">
+            WORKSPACE
+          </Typography>
+        </Box>
+
+        <List>
+          {menuItems.map((item) => (
+            <ListItemButton
+              key={item.name}
+              selected={activePage === item.name}
+              onClick={() => setActivePage(item.name)}
+              sx={{
+                mx: 1,
+                mb: 0.5,
+                borderRadius: 2,
+                "&.Mui-selected": {
+                  bgcolor: "#1e3a5f",
+                  color: "#38bdf8",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.name} />
+            </ListItemButton>
+          ))}
+        </List>
+
+        <Box sx={{ mt: "auto", p: 2 }}>
+          <Divider sx={{ borderColor: "#263247", mb: 2 }} />
+          <Typography variant="caption" color="#64748b">
+            SHADOWBASE
+          </Typography>
+          <Typography variant="body2" color="#94a3b8">
+            Zero-Downtime Schema Migration
+          </Typography>
+        </Box>
+      </Drawer>
+
+      {/* Main content */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8, minWidth: 0 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
         >
-          Count is {count}
-        </button>
-      </section>
+          <Box>
+            <Typography variant="h4" fontWeight="bold">
+              {activePage}
+            </Typography>
+            <Typography color="#94a3b8" sx={{ mt: 0.5 }}>
+              Monitor and safely test your database migrations.
+            </Typography>
+          </Box>
 
-      <div className="ticks"></div>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            sx={{ bgcolor: "#0284c7", textTransform: "none" }}
+          >
+            New Environment
+          </Button>
+        </Box>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
+        {/* Environment status */}
+        <Grid container spacing={2} sx={{ mb: 3 }}>
+          <Grid item xs={12} md={6}>
+            <Card
+              sx={{
+                bgcolor: "#151f30",
+                color: "white",
+                border: "1px solid #263247",
+              }}
+            >
+              <CardContent>
+                <Typography color="#94a3b8" variant="body2">
+                  PRODUCTION DATABASE
+                </Typography>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+                  <Storage sx={{ color: "#38bdf8" }} />
+                  <Typography variant="h6">MySQL</Typography>
+                  <Chip label="Not connected" size="small" color="warning" />
+                </Box>
+                <Typography variant="caption" color="#64748b">
+                  Source database environment
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          <Grid item xs={12} md={6}>
+            <Card
+              sx={{
+                bgcolor: "#151f30",
+                color: "white",
+                border: "1px solid #263247",
+              }}
+            >
+              <CardContent>
+                <Typography color="#94a3b8" variant="body2">
+                  SHADOW DATABASE
+                </Typography>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
+                >
+                  <Storage sx={{ color: "#a78bfa" }} />
+                  <Typography variant="h6">MySQL Sandbox</Typography>
+                  <Chip label="Not created" size="small" color="warning" />
+                </Box>
+                <Typography variant="caption" color="#64748b">
+                  Isolated migration testing environment
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* Metrics */}
+        <Grid container spacing={2} sx={{ mb: 3 }}>
+          {metrics.map((metric) => (
+            <Grid item xs={12} sm={6} md={4} key={metric.title}>
+              <Card
+                sx={{
+                  bgcolor: "#151f30",
+                  color: "white",
+                  border: "1px solid #263247",
+                }}
+              >
+                <CardContent>
+                  <Typography color="#94a3b8" variant="body2">
+                    {metric.title}
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold" sx={{ my: 1 }}>
+                    {metric.value}
+                  </Typography>
+                  <Typography variant="caption" color="#64748b">
+                    {metric.detail}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Migration workspace */}
+        <Card
+          sx={{
+            bgcolor: "#151f30",
+            color: "white",
+            border: "1px solid #263247",
+            mb: 3,
+          }}
+        >
+          <CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Code sx={{ color: "#38bdf8" }} />
+                <Typography variant="h6">Migration Workspace</Typography>
+              </Box>
+              <Chip
+                label={isModified ? "Unsaved Changes" : "Saved"}
+                size="small"
+                color={isModified ? "warning" : "success"}
+              />{" "}
+            </Box>
+
+            <Box
+              sx={{
+                bgcolor: "#0b1120",
+                border: "1px solid #263247",
+                borderRadius: 2,
+                p: 3,
+                minHeight: 180,
+              }}
+            >
+              <Editor
+                height="350px"
+                defaultLanguage="sql"
+                theme="vs-dark"
+                value={sqlCode}
+                onChange={(value) => {
+                  setSqlCode(value || "");
+                  setIsModified(true);
+                }}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: "on",
+                  automaticLayout: true,
+                  scrollBeyondLastLine: false,
+                }}
+              />
+            </Box>
+
+            <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setSqlCode(`-- Write your migration SQL here
+
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(100)
+);`);
+                  setIsModified(false);
+                }}
+                sx={{
+                  color: "#cbd5e1",
+                  borderColor: "#475569",
+                  textTransform: "none",
+                }}
+              >
+                Reset
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  const blob = new Blob([sqlCode], { type: "text/sql" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = "migration.sql";
+                  link.click();
+                  setIsModified(false);
+                  URL.revokeObjectURL(url);
+                }}
+                sx={{
+                  color: "#cbd5e1",
+                  borderColor: "#475569",
+                  textTransform: "none",
+                }}
+              >
+                Save
+              </Button>
+
+              <Button
+                variant="contained"
+                startIcon={<PlayArrow />}
+                sx={{ textTransform: "none" }}
+              >
+                Run Migration
+              </Button>
+
+              <Button
+                variant="outlined"
+                startIcon={<Terminal />}
+                sx={{
+                  color: "#cbd5e1",
+                  borderColor: "#475569",
+                  textTransform: "none",
+                }}
+              >
+                View Console
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+
+        {/* Safety panel */}
+        <Card
+          sx={{
+            bgcolor: "#151f30",
+            color: "white",
+            border: "1px solid #263247",
+          }}
+        >
+          <CardContent>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Shield sx={{ color: "#38bdf8" }} />
+              <Typography variant="h6">Migration Safety</Typography>
+            </Box>
+            <Typography color="#94a3b8" sx={{ mt: 1 }}>
+              Safety analysis will be available after migration testing.
+            </Typography>
+            <Typography variant="caption" color="#64748b">
+              No safety score available yet – waiting for actual test results.
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    </Box>
+  );
 }
 
-export default App
+export default App;
