@@ -22,6 +22,7 @@ import {
   Dashboard,
   Code,
   Storage,
+  Refresh,
   History,
   Settings,
   PlayArrow,
@@ -51,11 +52,47 @@ CREATE TABLE users (
     { name: "Settings", icon: <Settings /> },
   ];
 
-  const metrics = [
-    { title: "Queries Replayed", value: "0", detail: "Waiting for traffic" },
-    { title: "Error Rate", value: "0%", detail: "No errors recorded" },
-    { title: "Successful Queries", value: "0", detail: "No replay data yet" },
-  ];
+  
+
+const [metrics, setMetrics] = useState([
+  {
+    title: "Queries Replayed",
+    value: "1,250",
+    detail: "Total queries processed",
+  },
+  {
+    title: "Error Rate",
+    value: "2.4%",
+    detail: "30 failed queries",
+  },
+  {
+    title: "Successful Queries",
+    value: "1,220",
+    detail: "Queries executed successfully",
+  },
+]);
+
+const handleRefreshMetrics = () => {
+  setMetrics([
+    {
+      title: "Queries Replayed",
+      value: "1,300",
+      detail: "Total queries processed",
+    },
+    {
+      title: "Error Rate",
+      value: "2.3%",
+      detail: "30 failed queries",
+    },
+    {
+      title: "Successful Queries",
+      value: "1,270",
+      detail: "Queries executed successfully",
+    },
+  ]);
+};
+
+
 
   return (
     <Box
@@ -237,32 +274,86 @@ CREATE TABLE users (
           </Grid>
         </Grid>
 
-        {/* Metrics */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          {metrics.map((metric) => (
-            <Grid item xs={12} sm={6} md={4} key={metric.title}>
-              <Card
-                sx={{
-                  bgcolor: "#151f30",
-                  color: "white",
-                  border: "1px solid #263247",
-                }}
-              >
-                <CardContent>
-                  <Typography color="#94a3b8" variant="body2">
-                    {metric.title}
-                  </Typography>
-                  <Typography variant="h4" fontWeight="bold" sx={{ my: 1 }}>
-                    {metric.value}
-                  </Typography>
-                  <Typography variant="caption" color="#64748b">
-                    {metric.detail}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        
+{/* Metrics */}
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 2,
+  }}
+>
+  <Typography variant="h6" color="white">
+    Performance Metrics
+  </Typography>
+
+  <Button 
+    variant="outlined"
+    size="small"
+    startIcon={<Refresh />}
+    onClick={handleRefreshMetrics}
+    sx={{
+      color: "#60a5fa",
+      borderColor: "#3b82f6",
+    }}
+  >
+    Refresh Metrics
+  </Button>
+</Box>
+
+        
+<Grid container spacing={2} sx={{ mb: 3 }}>
+  {metrics.map((metric, index) => (
+    <Grid item xs={12} sm={6} md={4} key={metric.title}>
+      <Card
+        sx={{
+          bgcolor: "#151f30",
+          color: "white",
+          border: "1px solid #263247",
+          transition: "0.3s",
+          "&:hover": {
+            borderColor: "#3b82f6",
+            transform: "translateY(-3px)",
+          },
+        }}
+      >
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 1,
+            }}
+          >
+            <Typography color="#94a3b8" variant="body2">
+              {metric.title}
+            </Typography>
+
+            <Box
+              sx={{
+                color: ["#60a5fa", "#f87171", "#4ade80"][index],
+                fontSize: "22px",
+              }}
+            >
+              {["↻", "⚠", "✓"][index]}
+            </Box>
+          </Box>
+
+          <Typography variant="h4" fontWeight="bold" sx={{ my: 1 }}>
+            {metric.value}
+          </Typography>
+
+          <Typography variant="caption" color="#64748b">
+            {metric.detail}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+  ))}
+</Grid>
+
 
         {/* Migration workspace */}
         <Card
