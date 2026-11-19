@@ -476,6 +476,130 @@ CREATE TABLE users (
           </CardContent>
         </Card>
 
+        
+        {/* Migration Execution Status */}
+        <Card
+          sx={{
+            bgcolor: "#151f30",
+            color: "white",
+            border: "1px solid #263247",
+            mb: 3,
+          }}
+        >
+          <CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6">
+                Migration Execution Status
+              </Typography>
+              <Chip label="Not Started" color="warning" size="small" />
+            </Box>
+
+            <Typography color="#94a3b8" variant="body2">
+              Latest Migration
+            </Typography>
+
+            <Typography sx={{ mt: 1 }}>
+              Schema Migration – users table
+            </Typography>
+
+            <Typography variant="caption" color="#64748b">
+              Waiting for migration execution
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                gap: 4,
+                flexWrap: "wrap",
+                mt: 3,
+              }}
+            >
+              <Box>
+                <Typography variant="caption" color="#94a3b8">
+                  Execution Time
+                </Typography>
+                <Typography color="white">
+                  Not available
+                </Typography>
+              </Box>
+
+              <Box>
+                <Typography variant="caption" color="#94a3b8">
+                  Last Updated
+                </Typography>
+                <Typography color="white">
+                  Not available
+                </Typography>
+              </Box>
+            </Box>
+
+          </CardContent>
+        </Card>
+
+        
+        {/* Migration Logs */}
+        <Card
+          sx={{
+            bgcolor: "#151f30",
+            color: "white",
+            border: "1px solid #263247",
+            mb: 3,
+          }}
+        >
+          <CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6">
+                Migration Logs
+              </Typography>
+              <Chip label="Sample Logs" size="small" color="info" />
+            </Box>
+
+            <Box
+              sx={{
+                bgcolor: "#0b1220",
+                borderRadius: 2,
+                p: 2,
+              }}
+            >
+<Typography color="#64748b" variant="caption" display="block">
+  10:30:01 AM
+</Typography>
+<Typography color="#4ade80" variant="body2" sx={{ mb: 1 }}>
+  [INFO] ShadowBase dashboard initialized
+</Typography>
+
+<Typography color="#64748b" variant="caption" display="block">
+  10:30:05 AM
+</Typography>
+<Typography color="#4ade80" variant="body2" sx={{ mb: 1 }}>
+  [INFO] SQL editor is ready
+</Typography>
+
+<Typography color="#64748b" variant="caption" display="block">
+  10:30:10 AM
+</Typography>
+<Typography color="#fbbf24" variant="body2">
+  [WAITING] Awaiting migration execution
+</Typography>
+
+            </Box>
+          </CardContent>
+        </Card>
+
         {/* Safety panel */}
         <Card
           sx={{
