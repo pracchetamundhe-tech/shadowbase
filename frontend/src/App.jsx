@@ -471,7 +471,7 @@ CREATE TABLE users (
               }}
             >
               <Editor
-                height="350px"
+                height="280px"
                 defaultLanguage="sql"
                 theme="vs-dark"
                 value={sqlCode}
