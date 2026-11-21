@@ -1,4 +1,6 @@
 import Editor from "@monaco-editor/react";
+import QueryActivityChart from "./components/QueryActivityChart";
+import ErrorRateChart from "./components/ErrorRateChart";
 import { useState } from "react";
 import {
   AppBar,
@@ -212,15 +214,17 @@ CREATE TABLE users (
       </Drawer>
 
       {/* Main content */}
-<Box
-  component="main"
-  sx={{
-    flexGrow: 1,
-    p: { xs: 2, md: 4 },
-    mt: 9,
-    minWidth: 0,
-  }}
->        <Box
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: { xs: 2, md: 4 },
+          mt: 9,
+          minWidth: 0,
+        }}
+      >
+        {" "}
+        <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -230,19 +234,19 @@ CREATE TABLE users (
         >
           <Box>
             <Typography
-  variant="h4"
-  fontWeight="bold"
-  sx={{
-    fontSize: { xs: "1.7rem", md: "2rem" },
-    letterSpacing: "-0.8px",
-    background: "linear-gradient(90deg, #ffffff, #93c5fd)",
-    backgroundClip: "text",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  }}
->
-  {activePage}
-</Typography>
+              variant="h4"
+              fontWeight="bold"
+              sx={{
+                fontSize: { xs: "1.7rem", md: "2rem" },
+                letterSpacing: "-0.8px",
+                background: "linear-gradient(90deg, #ffffff, #93c5fd)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              {activePage}
+            </Typography>
             <Typography color="#94a3b8" sx={{ mt: 0.5 }}>
               Monitor and safely test your database migrations.
             </Typography>
@@ -269,7 +273,6 @@ CREATE TABLE users (
             New Environment
           </Button>
         </Box>
-
         {/* Environment status */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12} md={6}>
@@ -338,7 +341,6 @@ CREATE TABLE users (
             </Card>
           </Grid>
         </Grid>
-
         {/* Metrics */}
         <Box
           sx={{
@@ -349,15 +351,15 @@ CREATE TABLE users (
           }}
         >
           <Typography
-  variant="h6"
-  fontWeight="bold"
-  sx={{
-    color: "#e2e8f0",
-    letterSpacing: "0.3px",
-  }}
->
-  Performance Metrics
-</Typography>
+            variant="h6"
+            fontWeight="bold"
+            sx={{
+              color: "#e2e8f0",
+              letterSpacing: "0.3px",
+            }}
+          >
+            Performance Metrics
+          </Typography>
 
           <Button
             variant="outlined"
@@ -372,7 +374,6 @@ CREATE TABLE users (
             Refresh Metrics
           </Button>
         </Box>
-
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {metrics.map((metric, index) => (
             <Grid item xs={12} sm={6} md={4} key={metric.title}>
@@ -426,7 +427,10 @@ CREATE TABLE users (
             </Grid>
           ))}
         </Grid>
-
+        {/* Query activity visualization */}
+        <QueryActivityChart />
+        {/* Query success and failure visualization */}
+<ErrorRateChart />
         {/* Migration workspace */}
         <Card
           sx={{
@@ -439,28 +443,28 @@ CREATE TABLE users (
           }}
         >
           <CardContent>
-           <Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    mb: 2,
-    width: "100%",
-  }}
->
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-    <Code sx={{ color: "#38bdf8" }} />
-    <Typography variant="h6" fontWeight="bold">
-      Migration Workspace
-    </Typography>
-  </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+                width: "100%",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Code sx={{ color: "#38bdf8" }} />
+                <Typography variant="h6" fontWeight="bold">
+                  Migration Workspace
+                </Typography>
+              </Box>
 
-  <Chip
-    label={isModified ? "Unsaved Changes" : "Saved"}
-    size="small"
-    color={isModified ? "warning" : "success"}
-  />
-</Box>
+              <Chip
+                label={isModified ? "Unsaved Changes" : "Saved"}
+                size="small"
+                color={isModified ? "warning" : "success"}
+              />
+            </Box>
             <Box
               sx={{
                 bgcolor: "#0b1120",
@@ -502,16 +506,16 @@ CREATE TABLE users (
                   setIsModified(false);
                 }}
                 sx={{
-  color: "#cbd5e1",
-  borderColor: "#475569",
-  textTransform: "none",
-  borderRadius: 2,
-  px: 2,
-  "&:hover": {
-    borderColor: "#38bdf8",
-    background: "rgba(56,189,248,0.08)",
-  },
-}}
+                  color: "#cbd5e1",
+                  borderColor: "#475569",
+                  textTransform: "none",
+                  borderRadius: 2,
+                  px: 2,
+                  "&:hover": {
+                    borderColor: "#38bdf8",
+                    background: "rgba(56,189,248,0.08)",
+                  },
+                }}
               >
                 Reset
               </Button>
@@ -528,16 +532,16 @@ CREATE TABLE users (
                   URL.revokeObjectURL(url);
                 }}
                 sx={{
-  color: "#cbd5e1",
-  borderColor: "#475569",
-  textTransform: "none",
-  borderRadius: 2,
-  px: 2,
-  "&:hover": {
-    borderColor: "#38bdf8",
-    background: "rgba(56,189,248,0.08)",
-  },
-}}
+                  color: "#cbd5e1",
+                  borderColor: "#475569",
+                  textTransform: "none",
+                  borderRadius: 2,
+                  px: 2,
+                  "&:hover": {
+                    borderColor: "#38bdf8",
+                    background: "rgba(56,189,248,0.08)",
+                  },
+                }}
               >
                 Save
               </Button>
@@ -545,19 +549,20 @@ CREATE TABLE users (
               <Button
                 variant="contained"
                 startIcon={<PlayArrow />}
-sx={{
-  background: "linear-gradient(90deg, #0284c7, #2563eb)",
-  color: "#fff",
-  textTransform: "none",
-  borderRadius: 2,
-  px: 2,
-  boxShadow: "0 4px 14px rgba(37,99,235,0.2)",
-  transition: "all 0.25s ease",
-  "&:hover": {
-    background: "linear-gradient(90deg, #0369a1, #1d4ed8)",
-    transform: "translateY(-2px)",
-  },
-}}              >
+                sx={{
+                  background: "linear-gradient(90deg, #0284c7, #2563eb)",
+                  color: "#fff",
+                  textTransform: "none",
+                  borderRadius: 2,
+                  px: 2,
+                  boxShadow: "0 4px 14px rgba(37,99,235,0.2)",
+                  transition: "all 0.25s ease",
+                  "&:hover": {
+                    background: "linear-gradient(90deg, #0369a1, #1d4ed8)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
                 Run Migration
               </Button>
 
@@ -565,23 +570,22 @@ sx={{
                 variant="outlined"
                 startIcon={<Terminal />}
                 sx={{
-  color: "#cbd5e1",
-  borderColor: "#475569",
-  textTransform: "none",
-  borderRadius: 2,
-  px: 2,
-  "&:hover": {
-    borderColor: "#38bdf8",
-    background: "rgba(56,189,248,0.08)",
-  },
-}}
+                  color: "#cbd5e1",
+                  borderColor: "#475569",
+                  textTransform: "none",
+                  borderRadius: 2,
+                  px: 2,
+                  "&:hover": {
+                    borderColor: "#38bdf8",
+                    background: "rgba(56,189,248,0.08)",
+                  },
+                }}
               >
                 View Console
               </Button>
             </Box>
           </CardContent>
         </Card>
-
         {/* Migration Execution Status */}
         <Card
           sx={{
@@ -642,7 +646,6 @@ sx={{
             </Box>
           </CardContent>
         </Card>
-
         {/* Migration Logs */}
         <Card
           sx={{
@@ -697,7 +700,6 @@ sx={{
             </Box>
           </CardContent>
         </Card>
-
         {/* Safety panel */}
         <Card
           sx={{
