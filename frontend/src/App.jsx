@@ -1,6 +1,7 @@
 import Editor from "@monaco-editor/react";
 import QueryActivityChart from "./components/QueryActivityChart";
 import ErrorRateChart from "./components/ErrorRateChart";
+import MigrationProgressChart from "./components/MigrationProgressChart";
 import { useState } from "react";
 import {
   AppBar,
@@ -217,11 +218,14 @@ CREATE TABLE users (
       <Box
         component="main"
         sx={{
-          flexGrow: 1,
-          p: { xs: 2, md: 4 },
-          mt: 9,
-          minWidth: 0,
-        }}
+  flexGrow: 1,
+width: "100%",
+  maxWidth: "none",
+  minWidth: 0,
+  p: { xs: 2, md: 2 },
+  mt: 9,
+  overflowX: "hidden",
+}}
       >
         {" "}
         <Box
@@ -274,7 +278,8 @@ CREATE TABLE users (
           </Button>
         </Box>
         {/* Environment status */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid container spacing={3} sx={{ mt: 1, width: "100%" }}>
+          {" "}
           <Grid item xs={12} md={6}>
             <Card
               sx={{
@@ -307,7 +312,6 @@ CREATE TABLE users (
               </CardContent>
             </Card>
           </Grid>
-
           <Grid item xs={12} md={6}>
             <Card
               sx={{
@@ -427,10 +431,39 @@ CREATE TABLE users (
             </Grid>
           ))}
         </Grid>
-        {/* Query activity visualization */}
-        <QueryActivityChart />
-        {/* Query success and failure visualization */}
-<ErrorRateChart />
+        
+{/* Dashboard charts layout */}
+<Box
+  sx={{
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "1fr",
+      sm: "repeat(2, minmax(0, 1fr))",
+      lg: "repeat(3, minmax(0, 1fr))",
+    },
+    gap: { xs: 2, md: 2.5 },
+    width: "100%",
+    mt: 2,
+    mb: 3,
+    alignItems: "stretch",
+  }}
+>
+  {/* Query Activity Chart */}
+  <Box sx={{ minWidth: 0, width: "100%" }}>
+    <QueryActivityChart />
+  </Box>
+
+  {/* Query Success Rate Chart */}
+  <Box sx={{ minWidth: 0, width: "100%" }}>
+    <ErrorRateChart />
+  </Box>
+
+  {/* Migration Progress Chart */}
+  <Box sx={{ minWidth: 0, width: "100%" }}>
+    <MigrationProgressChart />
+  </Box>
+</Box>
+
         {/* Migration workspace */}
         <Card
           sx={{

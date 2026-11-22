@@ -1,8 +1,10 @@
 
+/* Global box sizing */
 * {
   box-sizing: border-box;
 }
 
+/* Remove default browser spacing */
 html,
 body,
 #root {
@@ -11,12 +13,33 @@ body,
   width: 100%;
 }
 
+/* Prevent unwanted horizontal scrolling */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Main application background */
 body {
   background-color: #0b1220;
   color: #f8fafc;
   font-family: "Inter", "Roboto", Arial, sans-serif;
 }
 
+/* Keep buttons consistent */
 button {
   font-family: inherit;
+}
+
+/* Responsive dashboard spacing */
+@media (max-width: 900px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  #root {
+    min-width: 320px;
+  }
 }
