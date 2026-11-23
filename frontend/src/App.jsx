@@ -397,6 +397,19 @@ width: "100%",
                 }}
               >
                 <CardContent>
+                  <Chip
+  label="DEMO DATA"
+  size="small"
+  sx={{
+    mb: 1.5,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    color: "#38bdf8",
+    border: "1px solid rgba(56, 189, 248, 0.3)",
+    fontSize: "0.65rem",
+    fontWeight: 700,
+    letterSpacing: 1,
+  }}
+/>
                   <Box
                     sx={{
                       display: "flex",
