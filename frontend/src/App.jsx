@@ -46,6 +46,13 @@ CREATE TABLE users (
   name VARCHAR(100)
 );`);
   const [isModified, setIsModified] = useState(false);
+  // Track the current SQL execution status
+const [executionStatus, setExecutionStatus] = useState("Ready");
+
+// Store messages displayed in the execution console
+const [consoleOutput, setConsoleOutput] = useState([
+  "Console initialized. Waiting for execution...",
+]);
 
   const menuItems = [
     { name: "Dashboard", icon: <Dashboard /> },
@@ -92,6 +99,38 @@ CREATE TABLE users (
       },
     ]);
   };
+  // Handle simulated SQL migration execution
+const handleRunMigration = () => {
+  // Check whether the SQL editor contains a query
+  if (!sqlCode.trim()) {
+    setExecutionStatus("Failed");
+    setConsoleOutput([
+      "[ERROR] No SQL query found. Please enter a query first.",
+    ]);
+    return;
+  }
+
+  // Update the execution status
+  setExecutionStatus("Running");
+
+  // Display initial console messages
+  setConsoleOutput([
+    "[INFO] Starting migration...",
+    "[INFO] Running in frontend demo mode.",
+    "[INFO] Waiting for execution result...",
+  ]);
+
+  // Simulate execution completion
+  setTimeout(() => {
+    setExecutionStatus("Success");
+
+    setConsoleOutput((previousMessages) => [
+      ...previousMessages,
+      "[SUCCESS] Demo migration completed.",
+      "[INFO] No SQL was executed against a database.",
+    ]);
+  }, 1000);
+};
 
   return (
     <Box
@@ -595,6 +634,7 @@ CREATE TABLE users (
               <Button
                 variant="contained"
                 startIcon={<PlayArrow />}
+                onClick={handleRunMigration}
                 sx={{
                   background: "linear-gradient(90deg, #0284c7, #2563eb)",
                   color: "#fff",
@@ -630,6 +670,92 @@ CREATE TABLE users (
                 View Console
               </Button>
             </Box>
+            {/* SQL Execution Console */}
+<Box
+  sx={{
+    mt: 3,
+    p: 2.5,
+    backgroundColor: "#080f1c",
+    border: "1px solid #263247",
+    borderRadius: 2,
+  }}
+>
+  {/* Console heading and execution status */}
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      mb: 2,
+    }}
+  >
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Terminal sx={{ color: "#38bdf8" }} />
+      <Typography fontWeight="bold" color="white">
+        Execution Console
+      </Typography>
+    </Box>
+
+    <Chip
+      label={executionStatus}
+      size="small"
+      color={
+        executionStatus === "Success"
+          ? "success"
+          : executionStatus === "Failed"
+            ? "error"
+            : executionStatus === "Running"
+              ? "info"
+              : "default"
+      }
+    />
+  </Box>
+
+  {/* Display execution messages */}
+  <Box
+    sx={{
+      minHeight: 110,
+      maxHeight: 200,
+      overflowY: "auto",
+      fontFamily: "monospace",
+    }}
+  >
+    {consoleOutput.map((message, index) => (
+      <Typography
+        key={index}
+        variant="body2"
+        sx={{
+          color: message.includes("[SUCCESS]")
+            ? "#4ade80"
+            : message.includes("[ERROR]")
+              ? "#f87171"
+              : "#94a3b8",
+          mb: 1,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {message}
+      </Typography>
+    ))}
+  </Box>
+
+  {/* Clear console messages */}
+  <Divider sx={{ borderColor: "#263247", my: 1.5 }} />
+
+  <Button
+    size="small"
+    onClick={() => {
+      setConsoleOutput([]);
+      setExecutionStatus("Ready");
+    }}
+    sx={{
+      color: "#94a3b8",
+      textTransform: "none",
+    }}
+  >
+    Clear Console
+  </Button>
+</Box>
           </CardContent>
         </Card>
         {/* Migration Execution Status */}
