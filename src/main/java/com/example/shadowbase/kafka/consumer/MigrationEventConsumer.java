@@ -14,7 +14,7 @@ public class MigrationEventConsumer {
     )
     public void consumeMigrationEvent(MigrationEvent event) {
 
-        System.out.println("========== KAFKA EVENT RECEIVED ==========");
+        System.out.println("KAFKA EVENT RECEIVED");
 
         System.out.println("Migration ID: " + event.getMigrationId());
         System.out.println("Schema Name: " + event.getSchemaName());
@@ -22,7 +22,6 @@ public class MigrationEventConsumer {
         System.out.println("New Version: " + event.getNewVersion());
         System.out.println("Status: " + event.getStatus());
 
-        System.out.println("==========================================");
     }
 }
 
