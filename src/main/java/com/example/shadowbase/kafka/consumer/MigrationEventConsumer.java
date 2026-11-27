@@ -1,17 +1,19 @@
 package com.example.shadowbase.kafka.consumer;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.example.shadowbase.model.MigrationEvent;
 
 @Service
 public class MigrationEventConsumer {
-
-
+	
+	 private final AtomicInteger receivedCount = new AtomicInteger(0);
     @KafkaListener(
         topics = "schema-migration-events",
         groupId = "shadowbase-group"
     )
+   
     public void consumeMigrationEvent(MigrationEvent event) {
 
         System.out.println("KAFKA EVENT RECEIVED");

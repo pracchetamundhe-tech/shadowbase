@@ -1,4 +1,5 @@
 package com.example.shadowbase.contoller;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.example.shadowbase.traffic.TrafficGenerator;
@@ -6,7 +7,6 @@ import com.example.shadowbase.traffic.TrafficGenerator;
 @RestController
 @RequestMapping("/api/kafka")
 public class TrafficGeneratorController {
-
 
     private final TrafficGenerator trafficGenerator;
 
@@ -20,6 +20,3 @@ public class TrafficGeneratorController {
         return count + " migration events sent to Kafka";
     }
 }
-
-
-
