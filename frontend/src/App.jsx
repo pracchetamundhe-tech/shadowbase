@@ -2,6 +2,8 @@ import Editor from "@monaco-editor/react";
 import QueryActivityChart from "./components/QueryActivityChart";
 import ErrorRateChart from "./components/ErrorRateChart";
 import MigrationProgressChart from "./components/MigrationProgressChart";
+import ErrorStatisticsChart from "./components/ErrorStatisticsChart";
+import SystemHealthPanel from "./components/SystemHealthPanel";
 import { useState } from "react";
 import {
   AppBar,
@@ -47,12 +49,12 @@ CREATE TABLE users (
 );`);
   const [isModified, setIsModified] = useState(false);
   // Track the current SQL execution status
-const [executionStatus, setExecutionStatus] = useState("Ready");
+  const [executionStatus, setExecutionStatus] = useState("Ready");
 
-// Store messages displayed in the execution console
-const [consoleOutput, setConsoleOutput] = useState([
-  "Console initialized. Waiting for execution...",
-]);
+  // Store messages displayed in the execution console
+  const [consoleOutput, setConsoleOutput] = useState([
+    "Console initialized. Waiting for execution...",
+  ]);
 
   const menuItems = [
     { name: "Dashboard", icon: <Dashboard /> },
@@ -100,37 +102,37 @@ const [consoleOutput, setConsoleOutput] = useState([
     ]);
   };
   // Handle simulated SQL migration execution
-const handleRunMigration = () => {
-  // Check whether the SQL editor contains a query
-  if (!sqlCode.trim()) {
-    setExecutionStatus("Failed");
+  const handleRunMigration = () => {
+    // Check whether the SQL editor contains a query
+    if (!sqlCode.trim()) {
+      setExecutionStatus("Failed");
+      setConsoleOutput([
+        "[ERROR] No SQL query found. Please enter a query first.",
+      ]);
+      return;
+    }
+
+    // Update the execution status
+    setExecutionStatus("Running");
+
+    // Display initial console messages
     setConsoleOutput([
-      "[ERROR] No SQL query found. Please enter a query first.",
+      "[INFO] Starting migration...",
+      "[INFO] Running in frontend demo mode.",
+      "[INFO] Waiting for execution result...",
     ]);
-    return;
-  }
 
-  // Update the execution status
-  setExecutionStatus("Running");
+    // Simulate execution completion
+    setTimeout(() => {
+      setExecutionStatus("Success");
 
-  // Display initial console messages
-  setConsoleOutput([
-    "[INFO] Starting migration...",
-    "[INFO] Running in frontend demo mode.",
-    "[INFO] Waiting for execution result...",
-  ]);
-
-  // Simulate execution completion
-  setTimeout(() => {
-    setExecutionStatus("Success");
-
-    setConsoleOutput((previousMessages) => [
-      ...previousMessages,
-      "[SUCCESS] Demo migration completed.",
-      "[INFO] No SQL was executed against a database.",
-    ]);
-  }, 1000);
-};
+      setConsoleOutput((previousMessages) => [
+        ...previousMessages,
+        "[SUCCESS] Demo migration completed.",
+        "[INFO] No SQL was executed against a database.",
+      ]);
+    }, 1000);
+  };
 
   return (
     <Box
@@ -257,14 +259,14 @@ const handleRunMigration = () => {
       <Box
         component="main"
         sx={{
-  flexGrow: 1,
-width: "100%",
-  maxWidth: "none",
-  minWidth: 0,
-  p: { xs: 2, md: 2 },
-  mt: 9,
-  overflowX: "hidden",
-}}
+          flexGrow: 1,
+          width: "100%",
+          maxWidth: "none",
+          minWidth: 0,
+          p: { xs: 2, md: 2 },
+          mt: 9,
+          overflowX: "hidden",
+        }}
       >
         {" "}
         <Box
@@ -437,18 +439,18 @@ width: "100%",
               >
                 <CardContent>
                   <Chip
-  label="DEMO DATA"
-  size="small"
-  sx={{
-    mb: 1.5,
-    backgroundColor: "rgba(56, 189, 248, 0.12)",
-    color: "#38bdf8",
-    border: "1px solid rgba(56, 189, 248, 0.3)",
-    fontSize: "0.65rem",
-    fontWeight: 700,
-    letterSpacing: 1,
-  }}
-/>
+                    label="DEMO DATA"
+                    size="small"
+                    sx={{
+                      mb: 1.5,
+                      backgroundColor: "rgba(56, 189, 248, 0.12)",
+                      color: "#38bdf8",
+                      border: "1px solid rgba(56, 189, 248, 0.3)",
+                      fontSize: "0.65rem",
+                      fontWeight: 700,
+                      letterSpacing: 1,
+                    }}
+                  />
                   <Box
                     sx={{
                       display: "flex",
@@ -483,39 +485,42 @@ width: "100%",
             </Grid>
           ))}
         </Grid>
-        
-{/* Dashboard charts layout */}
-<Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: {
-      xs: "1fr",
-      sm: "repeat(2, minmax(0, 1fr))",
-      lg: "repeat(3, minmax(0, 1fr))",
-    },
-    gap: { xs: 2, md: 2.5 },
-    width: "100%",
-    mt: 2,
-    mb: 3,
-    alignItems: "stretch",
-  }}
->
-  {/* Query Activity Chart */}
-  <Box sx={{ minWidth: 0, width: "100%" }}>
-    <QueryActivityChart />
-  </Box>
+        {/* Dashboard charts layout */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, minmax(0, 1fr))",
+              lg: "repeat(2, minmax(0, 1fr))",
+            },
+            gap: { xs: 2, md: 2.5 },
+            width: "100%",
+            mt: 2,
+            mb: 3,
+            alignItems: "stretch",
+          }}
+        >
+          {/* Query Activity Chart */}
+          <Box sx={{ minWidth: 0, width: "100%" }}>
+            <QueryActivityChart />
+          </Box>
 
-  {/* Query Success Rate Chart */}
-  <Box sx={{ minWidth: 0, width: "100%" }}>
-    <ErrorRateChart />
-  </Box>
+          {/* Query Success Rate Chart */}
+          <Box sx={{ minWidth: 0, width: "100%" }}>
+            <ErrorRateChart />
+          </Box>
 
-  {/* Migration Progress Chart */}
-  <Box sx={{ minWidth: 0, width: "100%" }}>
-    <MigrationProgressChart />
-  </Box>
-</Box>
-
+          {/* Migration Progress Chart */}
+          <Box sx={{ minWidth: 0, width: "100%" }}>
+            <MigrationProgressChart />
+          </Box>
+          <Box sx={{ minWidth: 0, width: "100%" }}>
+            <ErrorStatisticsChart />
+          </Box>
+        </Box>
+        {/* System health and container monitoring */}
+<SystemHealthPanel />
         {/* Migration workspace */}
         <Card
           sx={{
@@ -671,91 +676,91 @@ CREATE TABLE users (
               </Button>
             </Box>
             {/* SQL Execution Console */}
-<Box
-  sx={{
-    mt: 3,
-    p: 2.5,
-    backgroundColor: "#080f1c",
-    border: "1px solid #263247",
-    borderRadius: 2,
-  }}
->
-  {/* Console heading and execution status */}
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      mb: 2,
-    }}
-  >
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Terminal sx={{ color: "#38bdf8" }} />
-      <Typography fontWeight="bold" color="white">
-        Execution Console
-      </Typography>
-    </Box>
+            <Box
+              sx={{
+                mt: 3,
+                p: 2.5,
+                backgroundColor: "#080f1c",
+                border: "1px solid #263247",
+                borderRadius: 2,
+              }}
+            >
+              {/* Console heading and execution status */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Terminal sx={{ color: "#38bdf8" }} />
+                  <Typography fontWeight="bold" color="white">
+                    Execution Console
+                  </Typography>
+                </Box>
 
-    <Chip
-      label={executionStatus}
-      size="small"
-      color={
-        executionStatus === "Success"
-          ? "success"
-          : executionStatus === "Failed"
-            ? "error"
-            : executionStatus === "Running"
-              ? "info"
-              : "default"
-      }
-    />
-  </Box>
+                <Chip
+                  label={executionStatus}
+                  size="small"
+                  color={
+                    executionStatus === "Success"
+                      ? "success"
+                      : executionStatus === "Failed"
+                        ? "error"
+                        : executionStatus === "Running"
+                          ? "info"
+                          : "default"
+                  }
+                />
+              </Box>
 
-  {/* Display execution messages */}
-  <Box
-    sx={{
-      minHeight: 110,
-      maxHeight: 200,
-      overflowY: "auto",
-      fontFamily: "monospace",
-    }}
-  >
-    {consoleOutput.map((message, index) => (
-      <Typography
-        key={index}
-        variant="body2"
-        sx={{
-          color: message.includes("[SUCCESS]")
-            ? "#4ade80"
-            : message.includes("[ERROR]")
-              ? "#f87171"
-              : "#94a3b8",
-          mb: 1,
-          whiteSpace: "pre-wrap",
-        }}
-      >
-        {message}
-      </Typography>
-    ))}
-  </Box>
+              {/* Display execution messages */}
+              <Box
+                sx={{
+                  minHeight: 110,
+                  maxHeight: 200,
+                  overflowY: "auto",
+                  fontFamily: "monospace",
+                }}
+              >
+                {consoleOutput.map((message, index) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    sx={{
+                      color: message.includes("[SUCCESS]")
+                        ? "#4ade80"
+                        : message.includes("[ERROR]")
+                          ? "#f87171"
+                          : "#94a3b8",
+                      mb: 1,
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {message}
+                  </Typography>
+                ))}
+              </Box>
 
-  {/* Clear console messages */}
-  <Divider sx={{ borderColor: "#263247", my: 1.5 }} />
+              {/* Clear console messages */}
+              <Divider sx={{ borderColor: "#263247", my: 1.5 }} />
 
-  <Button
-    size="small"
-    onClick={() => {
-      setConsoleOutput([]);
-      setExecutionStatus("Ready");
-    }}
-    sx={{
-      color: "#94a3b8",
-      textTransform: "none",
-    }}
-  >
-    Clear Console
-  </Button>
-</Box>
+              <Button
+                size="small"
+                onClick={() => {
+                  setConsoleOutput([]);
+                  setExecutionStatus("Ready");
+                }}
+                sx={{
+                  color: "#94a3b8",
+                  textTransform: "none",
+                }}
+              >
+                Clear Console
+              </Button>
+            </Box>
           </CardContent>
         </Card>
         {/* Migration Execution Status */}
