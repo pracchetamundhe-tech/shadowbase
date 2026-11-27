@@ -1,10 +1,13 @@
+
+import { useState } from "react";
 import Editor from "@monaco-editor/react";
+
 import QueryActivityChart from "./components/QueryActivityChart";
 import ErrorRateChart from "./components/ErrorRateChart";
 import MigrationProgressChart from "./components/MigrationProgressChart";
 import ErrorStatisticsChart from "./components/ErrorStatisticsChart";
 import SystemHealthPanel from "./components/SystemHealthPanel";
-import { useState } from "react";
+
 import {
   AppBar,
   Toolbar,
@@ -41,17 +44,18 @@ const drawerWidth = 240;
 
 function App() {
   const [activePage, setActivePage] = useState("Dashboard");
+
   const [sqlCode, setSqlCode] = useState(`-- Write your migration SQL here
 
 CREATE TABLE users (
   id INT PRIMARY KEY,
   name VARCHAR(100)
 );`);
+
   const [isModified, setIsModified] = useState(false);
-  // Track the current SQL execution status
+
   const [executionStatus, setExecutionStatus] = useState("Ready");
 
-  // Store messages displayed in the execution console
   const [consoleOutput, setConsoleOutput] = useState([
     "Console initialized. Waiting for execution...",
   ]);
@@ -82,6 +86,7 @@ CREATE TABLE users (
     },
   ]);
 
+  // Refresh demo dashboard metrics
   const handleRefreshMetrics = () => {
     setMetrics([
       {
@@ -101,9 +106,9 @@ CREATE TABLE users (
       },
     ]);
   };
+
   // Handle simulated SQL migration execution
   const handleRunMigration = () => {
-    // Check whether the SQL editor contains a query
     if (!sqlCode.trim()) {
       setExecutionStatus("Failed");
       setConsoleOutput([
@@ -112,10 +117,8 @@ CREATE TABLE users (
       return;
     }
 
-    // Update the execution status
     setExecutionStatus("Running");
 
-    // Display initial console messages
     setConsoleOutput([
       "[INFO] Starting migration...",
       "[INFO] Running in frontend demo mode.",
@@ -164,18 +167,20 @@ CREATE TABLE users (
             background: "linear-gradient(90deg, #111c2e, #131f33)",
           }}
         >
-          {" "}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Shield sx={{ color: "#38bdf8", fontSize: 30 }} />
+
             <Typography variant="h6" fontWeight="bold">
               ShadowBase
             </Typography>
+
             <Chip
               label="MIGRATION SANDBOX"
               size="small"
               sx={{ color: "#38bdf8", bgcolor: "#172c43" }}
             />
           </Box>
+
           <Chip
             icon={<Cloud />}
             label="Sandbox Offline"
@@ -239,6 +244,7 @@ CREATE TABLE users (
               <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>
                 {item.icon}
               </ListItemIcon>
+
               <ListItemText primary={item.name} />
             </ListItemButton>
           ))}
@@ -246,9 +252,11 @@ CREATE TABLE users (
 
         <Box sx={{ mt: "auto", p: 2 }}>
           <Divider sx={{ borderColor: "#263247", mb: 2 }} />
+
           <Typography variant="caption" color="#64748b">
             SHADOWBASE
           </Typography>
+
           <Typography variant="body2" color="#94a3b8">
             Zero-Downtime Schema Migration
           </Typography>
@@ -268,7 +276,7 @@ CREATE TABLE users (
           overflowX: "hidden",
         }}
       >
-        {" "}
+        {/* Dashboard heading */}
         <Box
           sx={{
             display: "flex",
@@ -292,6 +300,7 @@ CREATE TABLE users (
             >
               {activePage}
             </Typography>
+
             <Typography color="#94a3b8" sx={{ mt: 0.5 }}>
               Monitor and safely test your database migrations.
             </Typography>
@@ -318,9 +327,9 @@ CREATE TABLE users (
             New Environment
           </Button>
         </Box>
+
         {/* Environment status */}
         <Grid container spacing={3} sx={{ mt: 1, width: "100%" }}>
-          {" "}
           <Grid item xs={12} md={6}>
             <Card
               sx={{
@@ -340,6 +349,7 @@ CREATE TABLE users (
                 <Typography color="#94a3b8" variant="body2">
                   PRODUCTION DATABASE
                 </Typography>
+
                 <Box
                   sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
@@ -347,12 +357,14 @@ CREATE TABLE users (
                   <Typography variant="h6">MySQL</Typography>
                   <Chip label="Not connected" size="small" color="warning" />
                 </Box>
+
                 <Typography variant="caption" color="#64748b">
                   Source database environment
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
+
           <Grid item xs={12} md={6}>
             <Card
               sx={{
@@ -372,6 +384,7 @@ CREATE TABLE users (
                 <Typography color="#94a3b8" variant="body2">
                   SHADOW DATABASE
                 </Typography>
+
                 <Box
                   sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
@@ -379,6 +392,7 @@ CREATE TABLE users (
                   <Typography variant="h6">MySQL Sandbox</Typography>
                   <Chip label="Not created" size="small" color="warning" />
                 </Box>
+
                 <Typography variant="caption" color="#64748b">
                   Isolated migration testing environment
                 </Typography>
@@ -386,7 +400,8 @@ CREATE TABLE users (
             </Card>
           </Grid>
         </Grid>
-        {/* Metrics */}
+
+        {/* Performance metrics heading */}
         <Box
           sx={{
             display: "flex",
@@ -398,10 +413,7 @@ CREATE TABLE users (
           <Typography
             variant="h6"
             fontWeight="bold"
-            sx={{
-              color: "#e2e8f0",
-              letterSpacing: "0.3px",
-            }}
+            sx={{ color: "#e2e8f0", letterSpacing: "0.3px" }}
           >
             Performance Metrics
           </Typography>
@@ -419,72 +431,89 @@ CREATE TABLE users (
             Refresh Metrics
           </Button>
         </Box>
-        <Grid container spacing={2} sx={{ mb: 3 }}>
+
+        {/* Equal-width performance metric cards */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, minmax(0, 1fr))",
+              md: "repeat(3, minmax(0, 1fr))",
+            },
+            gap: 2,
+            mb: 3,
+            width: "100%",
+          }}
+        >
           {metrics.map((metric, index) => (
-            <Grid item xs={12} sm={6} md={4} key={metric.title}>
-              <Card
-                sx={{
-                  background: "linear-gradient(145deg, #19263a, #111c2e)",
-                  color: "white",
-                  border: "1px solid #293b55",
-                  borderRadius: 3,
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    borderColor: "#38bdf8",
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 12px 30px rgba(56,189,248,0.10)",
-                  },
-                }}
-              >
-                <CardContent>
-                  <Chip
-                    label="DEMO DATA"
-                    size="small"
-                    sx={{
-                      mb: 1.5,
-                      backgroundColor: "rgba(56, 189, 248, 0.12)",
-                      color: "#38bdf8",
-                      border: "1px solid rgba(56, 189, 248, 0.3)",
-                      fontSize: "0.65rem",
-                      fontWeight: 700,
-                      letterSpacing: 1,
-                    }}
-                  />
+            <Card
+              key={metric.title}
+              sx={{
+                width: "100%",
+                minWidth: 0,
+                background: "linear-gradient(145deg, #19263a, #111c2e)",
+                color: "white",
+                border: "1px solid #293b55",
+                borderRadius: 3,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  borderColor: "#38bdf8",
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 12px 30px rgba(56,189,248,0.10)",
+                },
+              }}
+            >
+              <CardContent>
+                <Chip
+                  label="DEMO DATA"
+                  size="small"
+                  sx={{
+                    mb: 1.5,
+                    backgroundColor: "rgba(56, 189, 248, 0.12)",
+                    color: "#38bdf8",
+                    border: "1px solid rgba(56, 189, 248, 0.3)",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    letterSpacing: 1,
+                  }}
+                />
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 1,
+                  }}
+                >
+                  <Typography color="#94a3b8" variant="body2">
+                    {metric.title}
+                  </Typography>
+
                   <Box
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mb: 1,
+                      color: ["#60a5fa", "#f87171", "#4ade80"][index],
+                      fontSize: "22px",
                     }}
                   >
-                    <Typography color="#94a3b8" variant="body2">
-                      {metric.title}
-                    </Typography>
-
-                    <Box
-                      sx={{
-                        color: ["#60a5fa", "#f87171", "#4ade80"][index],
-                        fontSize: "22px",
-                      }}
-                    >
-                      {["↻", "⚠", "✓"][index]}
-                    </Box>
+                    {["↻", "⚠", "✓"][index]}
                   </Box>
+                </Box>
 
-                  <Typography variant="h4" fontWeight="bold" sx={{ my: 1 }}>
-                    {metric.value}
-                  </Typography>
+                <Typography variant="h4" fontWeight="bold" sx={{ my: 1 }}>
+                  {metric.value}
+                </Typography>
 
-                  <Typography variant="caption" color="#64748b">
-                    {metric.detail}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+                <Typography variant="caption" color="#64748b">
+                  {metric.detail}
+                </Typography>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </Box>
+
         {/* Dashboard charts layout */}
         <Box
           sx={{
@@ -501,26 +530,26 @@ CREATE TABLE users (
             alignItems: "stretch",
           }}
         >
-          {/* Query Activity Chart */}
           <Box sx={{ minWidth: 0, width: "100%" }}>
             <QueryActivityChart />
           </Box>
 
-          {/* Query Success Rate Chart */}
           <Box sx={{ minWidth: 0, width: "100%" }}>
             <ErrorRateChart />
           </Box>
 
-          {/* Migration Progress Chart */}
           <Box sx={{ minWidth: 0, width: "100%" }}>
             <MigrationProgressChart />
           </Box>
+
           <Box sx={{ minWidth: 0, width: "100%" }}>
             <ErrorStatisticsChart />
           </Box>
         </Box>
+
         {/* System health and container monitoring */}
-<SystemHealthPanel />
+        <SystemHealthPanel />
+
         {/* Migration workspace */}
         <Card
           sx={{
@@ -544,6 +573,7 @@ CREATE TABLE users (
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Code sx={{ color: "#38bdf8" }} />
+
                 <Typography variant="h6" fontWeight="bold">
                   Migration Workspace
                 </Typography>
@@ -555,6 +585,7 @@ CREATE TABLE users (
                 color={isModified ? "warning" : "success"}
               />
             </Box>
+
             <Box
               sx={{
                 bgcolor: "#0b1120",
@@ -583,6 +614,7 @@ CREATE TABLE users (
               />
             </Box>
 
+            {/* Migration workspace buttons */}
             <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
               <Button
                 variant="outlined"
@@ -609,15 +641,18 @@ CREATE TABLE users (
               >
                 Reset
               </Button>
+
               <Button
                 variant="outlined"
                 onClick={() => {
                   const blob = new Blob([sqlCode], { type: "text/sql" });
                   const url = URL.createObjectURL(blob);
                   const link = document.createElement("a");
+
                   link.href = url;
                   link.download = "migration.sql";
                   link.click();
+
                   setIsModified(false);
                   URL.revokeObjectURL(url);
                 }}
@@ -675,6 +710,7 @@ CREATE TABLE users (
                 View Console
               </Button>
             </Box>
+
             {/* SQL Execution Console */}
             <Box
               sx={{
@@ -685,7 +721,6 @@ CREATE TABLE users (
                 borderRadius: 2,
               }}
             >
-              {/* Console heading and execution status */}
               <Box
                 sx={{
                   display: "flex",
@@ -696,6 +731,7 @@ CREATE TABLE users (
               >
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Terminal sx={{ color: "#38bdf8" }} />
+
                   <Typography fontWeight="bold" color="white">
                     Execution Console
                   </Typography>
@@ -716,7 +752,6 @@ CREATE TABLE users (
                 />
               </Box>
 
-              {/* Display execution messages */}
               <Box
                 sx={{
                   minHeight: 110,
@@ -744,7 +779,6 @@ CREATE TABLE users (
                 ))}
               </Box>
 
-              {/* Clear console messages */}
               <Divider sx={{ borderColor: "#263247", my: 1.5 }} />
 
               <Button
@@ -763,6 +797,7 @@ CREATE TABLE users (
             </Box>
           </CardContent>
         </Card>
+
         {/* Migration Execution Status */}
         <Card
           sx={{
@@ -783,7 +818,10 @@ CREATE TABLE users (
                 mb: 2,
               }}
             >
-              <Typography variant="h6">Migration Execution Status</Typography>
+              <Typography variant="h6">
+                Migration Execution Status
+              </Typography>
+
               <Chip label="Not Started" color="warning" size="small" />
             </Box>
 
@@ -811,6 +849,7 @@ CREATE TABLE users (
                 <Typography variant="caption" color="#94a3b8">
                   Execution Time
                 </Typography>
+
                 <Typography color="white">Not available</Typography>
               </Box>
 
@@ -818,11 +857,13 @@ CREATE TABLE users (
                 <Typography variant="caption" color="#94a3b8">
                   Last Updated
                 </Typography>
+
                 <Typography color="white">Not available</Typography>
               </Box>
             </Box>
           </CardContent>
         </Card>
+
         {/* Migration Logs */}
         <Card
           sx={{
@@ -844,6 +885,7 @@ CREATE TABLE users (
               }}
             >
               <Typography variant="h6">Migration Logs</Typography>
+
               <Chip label="Sample Logs" size="small" color="info" />
             </Box>
 
@@ -857,6 +899,7 @@ CREATE TABLE users (
               <Typography color="#64748b" variant="caption" display="block">
                 10:30:01 AM
               </Typography>
+
               <Typography color="#4ade80" variant="body2" sx={{ mb: 1 }}>
                 [INFO] ShadowBase dashboard initialized
               </Typography>
@@ -864,6 +907,7 @@ CREATE TABLE users (
               <Typography color="#64748b" variant="caption" display="block">
                 10:30:05 AM
               </Typography>
+
               <Typography color="#4ade80" variant="body2" sx={{ mb: 1 }}>
                 [INFO] SQL editor is ready
               </Typography>
@@ -871,13 +915,15 @@ CREATE TABLE users (
               <Typography color="#64748b" variant="caption" display="block">
                 10:30:10 AM
               </Typography>
+
               <Typography color="#fbbf24" variant="body2">
                 [WAITING] Awaiting migration execution
               </Typography>
             </Box>
           </CardContent>
         </Card>
-        {/* Safety panel */}
+
+        {/* Migration Safety */}
         <Card
           sx={{
             background: "linear-gradient(145deg, #19263a, #111c2e)",
@@ -890,11 +936,14 @@ CREATE TABLE users (
           <CardContent>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Shield sx={{ color: "#38bdf8" }} />
+
               <Typography variant="h6">Migration Safety</Typography>
             </Box>
+
             <Typography color="#94a3b8" sx={{ mt: 1 }}>
               Safety analysis will be available after migration testing.
             </Typography>
+
             <Typography variant="caption" color="#64748b">
               No safety score available yet – waiting for actual test results.
             </Typography>
